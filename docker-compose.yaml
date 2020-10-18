@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: './frontend'
+      dockerfile: 'Dockerfile'
+    restart: 'unless-stopped'
+
+  backend:
+    build:
+      context: './backend'
+      dockerfile: 'Dockerfile'
+    restart: 'unless-stopped'
+
+  proxy:
+    depends_on:
+      - 'frontend'
+      - 'backend'
+    build:
+      context: './proxy'
+      dockerfile: 'Dockerfile'
+    ports:
+      - '8080:80/tcp'
+    restart: 'unless-stopped'

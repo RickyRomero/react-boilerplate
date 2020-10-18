@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  frontend-dev:
+    build:
+      context: './frontend'
+      dockerfile: 'Dockerfile.dev'
+    volumes:
+      - '/usr/app/node_modules/'
+      - './frontend/src:/usr/app'
+    stdin_open: true
+    restart: 'unless-stopped'
+
+  backend-dev:
+    build:
+      context: './backend'
+      dockerfile: 'Dockerfile.dev'
+    volumes:
+      - '/usr/app/node_modules/'
+      - './backend/src:/usr/app'
+    restart: 'unless-stopped'
+
+  proxy-dev:
+    depends_on:
+      - 'frontend-dev'
+      - 'backend-dev'
+    build:
+      context: './proxy'
+      dockerfile: 'Dockerfile.dev'
+    ports:
+      - '8080:80/tcp'
+    restart: 'unless-stopped'
